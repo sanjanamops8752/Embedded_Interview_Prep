@@ -164,6 +164,12 @@
     5. Load bootloader (e.g., U-Boot)
     6. Bootloader loads OS (Linux, etc.)
 
+    System powers on/resets > fetch reset vector (from ROM, because it is usually located at the address of start of ROM, where first instructions stored) > jumps to
+    base address of ROM where PC points to the reset vector which points to the boot code stored at base address of ROM > execute boot code (whose main job is to initialize 
+    system i.e. essential hardware like CPU, RAM, I/O devices > load bootloader (from ROm/Flash) > bootloader executes (its responsible for loading the OS) > load OS into RAM > 
+    OS takes control over the system managing hardware/other resources > Initialize firmware (to control the hardware directly) > load device drivers (to communicate with hw) >
+    User software application 
+
 10. C Program Execution
 
   10.1 Compilation Stages
