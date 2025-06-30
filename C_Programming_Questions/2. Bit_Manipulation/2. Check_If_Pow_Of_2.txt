@@ -1,0 +1,24 @@
+#include <stdio.h> 
+
+void check_if_pow_of_2(unsigned int x)
+{
+    //pow of 2 has only 1 bit eg 0100(4) or 1000(8)
+    //x&(x-1)=0100 & 0011 - makes all bits to right of 1 as 1 as left of one as 0
+    //so if the result is 0, it is a power of 2
+    int res = x&(x-1);
+    if(res==0)
+    {
+        printf("%u is a power of 2 \n",x);
+    }
+    else
+    {
+        printf("Not a power of 2 \n");
+    }
+}
+
+int main()
+{
+    unsigned int x = 4;
+    check_if_pow_of_2(x);
+    return 0;
+}

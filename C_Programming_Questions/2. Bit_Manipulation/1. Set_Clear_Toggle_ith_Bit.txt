@@ -1,0 +1,30 @@
+#include <stdio.h> 
+
+void set_bit(int x, int bit_pos)
+{
+    x |= (1<<bit_pos); //100 | 010 = 110
+    printf("%d",x); //110 = 6
+}
+
+void clear_bit(int x, int bit_pos)
+{
+    x &= ~(1<<bit_pos); //100 & ~010 = 100 & 000 = 000
+    printf("%d",x); //000 = 0
+}
+
+void toggle_bit(int x, int bit_pos)
+{
+    x ^= (1<<bit_pos); //100 ^ 010 = 110
+    printf("%d",x); //110 = 6
+}
+
+int main()
+{
+    int x = 4; //100 = in bit manipulation, we count 1(as pos2),0(as pos0)
+    int bit_pos = 1;
+    set_bit(x,bit_pos);
+    //clear_bit(x,2);//bit_pos=2
+    //toggle_bit(x,bit_pos);
+    return 0;
+}
+

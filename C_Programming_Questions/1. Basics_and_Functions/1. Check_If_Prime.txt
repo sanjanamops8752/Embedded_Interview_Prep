@@ -1,0 +1,38 @@
+#include <stdio.h> 
+#include <math.h>
+
+void check_if_prime(int num)
+{
+    int cnt=0; //to count number of factors number has
+    if(num<2)
+    {
+        printf("Neither prime nor composite \n"); //if num=1/0, its neither prime nor composite
+    }
+    else
+    {
+        for(int i=2;i<sqrt(num);i++) //dont have to check for range upto num, if number is/isnt divisible upto square root of the number then no need to check further
+        {
+            if(num%i==0)
+            {
+                cnt += 1; //counting factors
+            }
+        }
+    }
+    if(cnt>2) //prime number has only two factors-1 and itself
+    {
+        printf("%d is not a prime number \n",num);
+    }
+    else
+    {
+        printf("%d is a prime number \n",num);
+    }
+}
+
+int main()
+{
+    int num;
+    printf("Enter a number: \n");
+    scanf("%d",&num);
+    check_if_prime(num);
+    return 0;
+}

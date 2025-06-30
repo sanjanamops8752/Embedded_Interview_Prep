@@ -1,0 +1,21 @@
+#include <stdio.h> 
+
+#define uint unsigned int 
+
+void find_hamming_weight(uint x)
+{
+    int count = 0; //to count the number of set bits
+    while(x>0) 
+    {
+        x = x&(x-1);//x&(x-1) will convert all 1s to 0s
+        count++; //count will ++ till x is fully 0 
+    }
+    printf("Hamming weight is %d",count);
+}
+
+int main()
+{
+    uint x = 0xA5; //10100101a
+    find_hamming_weight(x);
+    return 0;
+}
