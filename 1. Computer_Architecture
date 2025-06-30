@@ -170,7 +170,7 @@
     OS takes control over the system managing hardware/other resources > Initialize firmware (to control the hardware directly) > load device drivers (to communicate with hw) >
     User software application 
 
-10. C Program Execution
+10. C Program Execution/Build Process
 
   10.1 Compilation Stages
     1. .c → Preprocessor → .i (expanded C)
