@@ -1,0 +1,178 @@
+1. SoC vs Microprocessor vs Microcontroller
+
+  1.1 What is a SoC (System on Chip)?
+    a. Definition: A SoC is an integrated circuit that combines all major components of a computer/electronic system into a single chip.
+    b. Why is it used? - Reduces power consumption, Saves space, Improves performance by reducing latency between components
+    c. What it contains? Processor core(s) (ARM, RISC-V, etc.), Memory (RAM, ROM), Peripherals (GPIO, UART, I2C, SPI), Power Management Unit (PMU), Secure Boot logic / Firmware, Optional: DSP, GPU, AI accelerators
+    d. Use cases? Smartphones (Snapdragon, Apple A-series)
+  
+  1.2 What is a Microprocessor?
+    a. Definition: A general-purpose processing unit that executes instructions but does not contain onboard memory or peripherals.
+    b. Why is it used? For high-performance, general-purpose computing
+    c. What it includes? Only the CPU core
+    d. Where is it used? Desktops, Laptops (e.g., Intel Core i7, AMD Ryzen)
+  
+  1.3 What is a Microcontroller (MCU)?
+    a. Definition: A compact IC that includes a processor, memory, and I/O on one chip.
+    b. Why is it used? Low-power control tasks in embedded systems
+    c. What it includes? CPU + Flash + RAM + Peripherals
+    d. Where is it used? Washing machines, microwave ovens, cars, IoT devices
+    Examples: ATmega328P (Arduino), STM32, PIC
+
+2. CPU Architecture and Components
+  
+  2.1 What is a CPU?
+    a. Definition: Central Processing Unit, the brain of the system responsible for executing program instructions.
+    b. Located: Inside the SoC or as a standalone chip in MPUs
+    c. Core types: Single-core / Multi-core
+    d. Big-Little architecture (ARM) Endianness: Little vs Big
+  
+  2.2 Internal Components of CPU
+    [Control Unit] ---> [ALU] ---> [Registers] ---> [Cache] ---> [PC, IR, SP, etc.]
+    a. Control Unit: Fetches, decodes, and manages instruction execution.
+    b. ALU: Performs arithmetic and logic operations.
+    c. Registers: Small, fast memory inside CPU, Stores operands, addresses, results Register Types: Accumulator, Program Counter (PC), Instruction Register (IR)
+    d. Cache: Temporary storage for frequently accessed data, Faster than RAM, closer to CPU
+  
+  2.3 Instruction Cycle (Fetch-Decode-Execute-Store)
+    1. Fetch   -> From memory using PC
+    2. Decode  -> Control unit interprets
+    3. Execute -> ALU performs operation
+    4. Store   -> Result written to register or memory
+  
+  2.4 Advanced Features
+    a. Pipelining: Overlaps stages of multiple instructions.
+      Instruction 1: Fetch -> Decode -> Execute
+      Instruction 2:       Fetch -> Decode
+      Instruction 3:              Fetch
+    b. Branch Prediction: CPU guesses next instruction for better pipelining.
+    c. Speculative Execution: Pre-executes instructions ahead of time.
+
+3. Memory System in Computers
+
+  3.1 Hierarchical Structure (from fastest to slowest):
+    [Registers] > [L1 Cache] > [L2 Cache] > [L3 Cache] > [RAM] > [Storage]
+  
+  3.2 Registers
+    a. What: Smallest, fastest memory inside CPU
+    b. Why: Holds intermediate data (operands, results, addresses)
+    c. Example: Accumulator, Stack Pointer
+  
+  3.3 Cache Memory
+    a. What: High-speed memory close to CPU
+    b. Why: Avoids repeated RAM access
+    c. Types:
+      L1 (fastest, smallest, per core, SRAM)
+      L2 (slower than L1, per core or shared)
+      L3 (shared among cores, large, slower)
+  
+  Location: On-chip (within CPU die)
+  
+  3.4 Locality of Reference
+    a. Definition: Pattern in which programs access data
+    b. Temporal Locality: If data is accessed once, it’s likely accessed again soon.
+    c. Spatial Locality: If one memory address is accessed, nearby ones likely will be.
+    
+  Cache uses both:
+    a. Prefetch nearby data
+    b. Keep recent data in faster memory
+  
+  3.5 Cache Coherency
+    a. Why: Multi-core systems may have outdated copies in different caches.
+    b. Protocol: MESI (Modified, Exclusive, Shared, Invalid)
+    c. Ensures: All cores have a consistent view of memory
+
+4. RAM vs ROM
+
+  4.1 RAM (Volatile)
+    a. What: Main working memory
+    b. Why: Temporarily holds active program/data
+    c. Located: Off-chip, on motherboard or SoC
+    d. Types:
+      DRAM: Slower, uses capacitors, needs refresh
+      SRAM: Faster, uses flip-flops, no refresh, used in cache
+  
+  4.2 ROM (Non-Volatile)
+    a. What: Read-only memory
+    b. Why: Stores bootloader, firmware
+    c. Types:
+      NOR Flash: Random access
+      NAND Flash: Higher density, used in SSDs
+    Location: On SoC or external chip
+  
+  4.3 Data Stored
+  a. RAM: Active process data, stack, heap
+  b. ROM: Boot code, firmware, system configs
+
+5. Virtual Memory & Paging
+
+  5.1 What is Virtual Memory?
+    a. What: Abstraction where processes believe they have continuous memory
+    b. Why: To isolate processes and extend RAM using disk
+    c. Handled by: MMU (Memory Management Unit)
+  
+  5.2 Components
+    [Virtual Address] --> [Page Table] --> [Frame in RAM] --> [MMU + TLB] helps translation
+    a. Page: Block in virtual memory
+    b. Frame: Block in physical memory (same size)
+    c. Page Table: Maps page → frame
+    d. TLB: Cache for page table entries
+    e. MMU: Hardware unit for address translation
+  
+  5.3 Page Fault
+    Occurs when page not in RAM → OS loads it from disk
+
+6. DMA – Direct Memory Access
+
+6.1 What is DMA?
+  a. What: Allows peripherals to access RAM without CPU
+  b. Why: Offloads CPU for large data transfers
+  1. CPU initiates DMA
+  2. DMA controller takes over data bus
+  3. Transfers data between RAM <-> Device
+  4. Sends interrupt to CPU on completion
+
+7. Memory Mapping
+
+  7.1 What is Memory Mapping?
+    a. What: Assigning physical memory or I/O addresses into virtual address space
+    b. Why: Easier access to hardware using standard memory read/write
+  
+  7.2 Types
+    a. Memory-Mapped I/O (MMIO): Devices appear as memory locations, CPU accesses registers like normal variables
+    b. Paged Memory Mapping: Maps virtual pages to physical frames, Uses page tables, MMU
+
+8. Memory Segmentation
+
+  8.1 What is it?
+    a. What: Dividing memory into logical segments
+    b. Why: For isolation and organized access
+  
+  8.2 Common Segments
+    a. [Code Segment]   - Executable code
+    b. [Data Segment]   - Global/static variables
+    c. [Heap Segment]   - malloc() memory
+    d. [Stack Segment]  - Local variables, function calls
+
+9. System Boot Process
+
+  9.1 Flow
+    1. Power ON or Reset
+    2. Fetch Reset Vector (Fixed ROM address)
+    3. PC points to ROM
+    4. Execute boot code
+    5. Load bootloader (e.g., U-Boot)
+    6. Bootloader loads OS (Linux, etc.)
+
+10. C Program Execution
+
+  10.1 Compilation Stages
+    1. .c → Preprocessor → .i (expanded C)
+    2. .i → Compiler → .s (assembly)
+    3. .s → Assembler → .o (object)
+    4. .o + others → Linker → .elf, .hex, .bin
+  
+  10.2 Output Files
+    .elf: Executable with debug info
+    .hex: For microcontrollers (Intel hex format)
+    .bin: Raw binary to flash
