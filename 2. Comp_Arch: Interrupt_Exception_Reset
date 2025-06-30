@@ -1,0 +1,35 @@
+               +-----------------+
+               |  CPU            |
+               +-----------------+
+                ↑        ↑        ↑
+     Software   |        |        |  Hardware
+    Interrupts  |        |        |  Interrupts
+   (System call)|        |        |  (I/O, Timer)
+                |        |        |
+           [Instruction Exception]
+         (Divide by Zero, Page Fault)
+
+                 ↓ Context Save
+            → Jumps to Handler (ISR/Exception Vector)
+
+11. Exceptions vs Interrupts vs Reset
+
+  11.1 Exception
+  a. What: An internal event that disrupts the normal execution flow.
+  b. Why it occurs: Software or CPU-level error (e.g., divide by zero, invalid opcode).
+  c. What happens: CPU suspends current instruction, Saves context (PC, registers), Jumps to exception handler (vector table), Handler runs and resumes execution.
+  d. Handled by: Exception handler routines (logging, recovery, reboot).
+  
+  11.2 Interrupt
+  a. What: An asynchronous event (internal or external) that requests CPU attention.
+  b. Why it occurs: I/O events (hardware interrupt: keyboard, mouse) or software interrupt (system call).
+  c. What happens: CPU suspends current task, Saves context, Jumps to interrupt vector, Runs ISR (Interrupt Service Routine).
+  
+  11.3 Reset
+  a. What: Brings the system back to initial known state.
+  b. Why it occurs: Power-on, critical failure, watchdog timeout.
+  c. What happens:
+    Clears most registers.
+    Jumps to reset vector.
+    Executes boot code.
+  d. Effect: Full system restart unlike exception (localized handling).
