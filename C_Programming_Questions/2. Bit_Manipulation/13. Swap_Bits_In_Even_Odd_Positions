@@ -1,0 +1,17 @@
+#include <stdio.h> 
+
+int main()
+{
+    int a = 7;//0111
+    int even_mask = 0xAAAAAAAA; //A = 1010 has 1s in even positions
+    int odd_mask = 0x55555555; //5 = 0101 has 1s in odd positions
+    
+    int even_bits = a & even_mask;
+    int odd_bits = a & odd_mask;
+    
+    even_bits = even_bits >> 1;
+    odd_bits = odd_bits << 1;
+    
+    int swapped_bits = even_bits | odd_bits;
+    printf("%d",swapped_bits);//1011 = 11
+}
