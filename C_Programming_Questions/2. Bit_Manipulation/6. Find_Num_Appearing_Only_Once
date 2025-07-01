@@ -1,0 +1,19 @@
+#include <stdio.h> 
+
+void find_num_that_appears_once(int *arr, int size)
+{
+    int res = 0;
+    for(int i=0; i<size;i++)
+    {
+        res = res^arr[i]; //same numbers cancel out each other
+    }
+    printf("Number appearing only once is %d",res);
+}
+
+int main()
+{
+    int arr[] = {1,2,1,3,3}; //checks for number appearing once when other elements are appearing twice
+    int size = sizeof(arr)/sizeof(arr[0]);
+    find_num_that_appears_once(arr,size);
+    return 0;
+}
