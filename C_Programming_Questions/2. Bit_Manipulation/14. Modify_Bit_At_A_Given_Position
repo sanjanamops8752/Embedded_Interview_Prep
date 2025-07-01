@@ -1,0 +1,16 @@
+#include <stdio.h> 
+
+void modify_bit_at_given_position(int n, int bit, int bit_pos)
+{
+    int mask = (1<<bit_pos);
+    n = (n&~mask)|(bit<<bit_pos); //first clear old bit at that bit pos, then set new bit
+    printf("%d",n); //1100 = 12
+}
+
+int main()
+{
+    int n = 8; //1000
+    int bit=1, bit_pos=2; //bit can be 0/1
+    modify_bit_at_given_position(n,bit_pos,bit);
+    return 0;
+}
