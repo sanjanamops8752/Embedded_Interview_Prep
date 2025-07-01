@@ -1,0 +1,13 @@
+#include <stdio.h> 
+
+int main()
+{
+    int arr[] = {1,2,3,4,5};
+    int size = sizeof(arr)/sizeof(arr[0]); //sizeof arr would be 20 bytes, divided by size of int 4 bytes will give num of elements
+    int *ptr = arr; //pointer points to 1st element of arr = 1
+    for(int i=0; i<size; i++)
+    {
+        printf("%d",*ptr++); //de-reference pointer and incrementing it 
+    }
+    return 0;
+}
