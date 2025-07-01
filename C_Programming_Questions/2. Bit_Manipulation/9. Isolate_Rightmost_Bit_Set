@@ -2,13 +2,14 @@
 
 void isolate_rightmost_bit(int n)
 {
-    int righmost_bit = n & (~(n-1));
+    //1100 & (~(1011)) = 1100 & ...1110100(in 32-bit 2's complement) = 1100 & ...0100 = only the rightmost 1 survives
+    int righmost_bit = n & (~(n-1)); 
     printf("%d",righmost_bit);
 }
 
 int main()
 {
-    int n = 5; //101
+    int n = 12; //1100
     isolate_rightmost_bit(n);
     return 0;
 }
