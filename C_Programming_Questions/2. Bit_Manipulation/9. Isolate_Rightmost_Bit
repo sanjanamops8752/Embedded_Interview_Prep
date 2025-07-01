@@ -1,0 +1,14 @@
+#include <stdio.h> 
+
+void isolate_rightmost_bit(int n)
+{
+    int righmost_bit = n & (~(n-1));
+    printf("%d",righmost_bit);
+}
+
+int main()
+{
+    int n = 5; //101
+    isolate_rightmost_bit(n);
+    return 0;
+}
