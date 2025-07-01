@@ -1,0 +1,17 @@
+#include <stdio.h> 
+
+void modify_range_of_bits(int n, int l, int r)
+{
+    int range;
+    range = ((1<<(l-1))-1)^((1<<r)-1); //remember this
+    int res = n|range;
+    printf("%d",res); //1011
+}
+
+int main()
+{
+    int n = 8; //1000-number whose bits we are going to modify 
+    int l=1, r=2;  //l is the starting bit pos, r is ending bit pos
+    modify_range_of_bits(n,l,r);
+    return 0;
+}
