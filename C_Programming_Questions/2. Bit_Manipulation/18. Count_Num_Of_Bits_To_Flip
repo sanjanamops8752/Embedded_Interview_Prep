@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+int countBitsToFlip(int a, int b) {
+    int xor = a ^ b;  //will give bits that are different
+    int count = 0;
+    //count set bits in xor
+    while (xor) {
+        count += (xor & 1);  //if LSB is 1, increment count
+        xor >>= 1;           //right shift xor by 1
+    }
+    return count;
+}
+
+int main() {
+    int a = 29;  // Example A: 11101
+    int b = 15;  // Example B: 01111
+    printf("Number of bits to flip to convert %d to %d is: %d\n", a, b, countBitsToFlip(a, b));
+    return 0;
+}
