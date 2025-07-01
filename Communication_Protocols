@@ -1,0 +1,67 @@
+COMMUNICATION PROTOCOLS 
+
+1. Communication Protocol 
+  a. It is a set of rules that govern the exchange of data between two or more devices in a network/embedded systems. 
+  b. These protocols ensure that the data transmitted is properly formatted, understood and interpretted by the sender and receiver.  
+
+2. Synchronous Vs Asynchronous Communication 
+  a. Synchronous Communication - involves a shared clock signal between sender and receiver. This ensures both devices are synced in time and they can coordinate when to send 
+     and receive each bit. Since clock is common, the data transfer is faster and in continuous form. Example - SPI, I2C
+  
+     Mechanism: (how both ends know exactly when to sample data)
+       1. The clock signal toggles at a fixed frequency (e.g. 1MHz), creating rising and falling edges. 
+       2. Devices synchronize their internal logic to this clock - Clock edges (the transitions from LOW to HIGH or HIGH to LOW voltage) act as "tick" moments
+          and devices only read or write data at those tick points. 
+       3. Each bit is sampled on a specific clock edge (e.g. rising edge).
+  
+     Advantage: 
+       1. Bulk transfer 
+       2. Minimal Overhead - no need for start and stop bits
+       3. Accurate timing 
+  
+     Disadvantage: 
+       1. Needs a designated clock line, that can increase the pin count. 
+       2. Not ideal for long distance communication or in noisy environments. 
+  
+  b. Asynchronous Communication - does not involve a shared clock. Sender and receiver, operate on their internal clocks, must agree on a common baud rate beforehand. 
+     Data transmission is coordinated using start and stop bits. These bits tell us when a frame is starting/ending. 
+  
+     Mechanism: 
+     1. Sender starts communication with start bit(logic low). 
+     2. This signals the receiver to start reading the incoming bits. 
+     3. A fixed number of data bits follow. 
+     4. An optional parity bit might be added for error checking. 
+     5. A stop bit (logic high) indicates end of transmission. 
+  
+     Advantage: 
+     1. Peer to peer communication. 
+     2. Ideal for long distance communication. 
+  
+     Disadvantage: 
+     1. Overhead. 
+     2. Timing mismatch. 
+  
+  c. Sampling and Bit errors in Asynchronous Communication 
+     A sampling error occurs when the receiver samples the incoming data at the wrong time, leading to incorrect interpretation of the bit value (0 or 1).
+     A bit error refers to the alteration or corruption of a bit during transmission, usually due to noise, interference, or timing mismatches.
+     
+     Timing mismatch is a common problem in asynchronous communication. This happens when the sender and receiver's clocks differ slightly. 
+     This is why the baud rate must match. 
+
+3. Simplex, Half-Duplex and Full-Duplex Communication 
+   Communication modes define the direction of data flow between devices. 
+   a. Simplex Communication - allows data to flow in only one direction — from the sender to the receiver — with no possibility of reverse communication. 
+      A good example is a keyboard. 
+   b. Half-Duplex Communication - allows data to be sent and received in both directions, but not simultaneously. At any given moment, the device can either send or receive. 
+      Walkie-talkies or RS-485 systems use half-duplex communication.
+   c. Full Duplex Communication allows data transmission in both directions simultaneously, just like a telephone call. Devices can send and receive data at the same time without interference. 
+      Modern USB, Ethernet, and UART support full duplex.
+
+4. Error Detection Mechanisms in Communication Protocols
+    a. Parity Bit - A simple form of error detection. An extra bit (either even or odd parity) is added to ensure that the total number of 1s in the data word is even 
+    (for even parity) or odd (for odd parity). Used in UART, though not highly reliable for complex systems.
+    b. Checksum - A calculated value (sum of data bytes) is sent along with the data. The receiver recalculates the checksum and compares it with the received one.
+       Common in networking protocols like IP, TCP, UDP.
+    c. Cyclic Redundancy Check (CRC) - A more robust mechanism than checksums. Uses polynomial division to generate a unique value based on the data payload.
+       Errors such as burst errors can be detected efficiently. Used in CAN, Ethernet, and USB protocols.
+
