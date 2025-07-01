@@ -1,1 +1,14 @@
+#include <stdio.h> 
 
+void nibble_reverse(unsigned char N)
+{
+    unsigned char res = (N >> 4) | (N << 4);
+    printf("%X",res); //0x54
+}
+
+int main()
+{
+    unsigned char N = 0x45; //01000101
+    nibble_reverse(N);
+    return 0;
+}
