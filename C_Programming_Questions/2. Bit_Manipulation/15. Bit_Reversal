@@ -1,9 +1,5 @@
 #include <stdio.h> 
 
-#include <stdio.h> 
-
-#include <stdio.h>
-
 unsigned char reverse_bits(unsigned char n)
 {
     unsigned char rev = 0;           //rev starts as 00000000
