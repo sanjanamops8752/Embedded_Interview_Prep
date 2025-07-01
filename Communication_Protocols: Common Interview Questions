@@ -1,0 +1,129 @@
+SPI (Serial Peripheral Interface) Questions: Basic/Intermediate/Advanced
+
+  1. What happens when MISO and MOSI are incorrectly connected? 
+  If they are swapped, the data transfer will fail completely. Because the master will send data on what it thinks as MOSI and the slave receives it on its MISO line (which is actually
+  an output line) and vice versa.
+  
+  2. What are the 4 SPI modes and how to use them? 
+  Mode 0 (CPOL=0, CPHA=0): Clock idle low, data sampled on rising edge - most common
+  Mode 1 (CPOL=0, CPHA=1): Clock idle low, data sampled on falling edge 
+  Mode 2 (CPOL=1, CPHA=0): Clock idle high, data sampled on falling edge 
+  Mode 3 (CPOL=1, CPHA=1): Clock idle high, data sampled on rising edge 
+  
+  The mode must match between master and slave, determined by the slave device's specifications.
+  
+  3. Is SPI suitable for multi-master communication?
+  No, SPI is inherently single-master. It lacks arbitration mechanisms and addressing schemes needed for multi-master setups. 
+  Multiple masters would cause data corruption.
+  
+  4. How would you interface 3 SPI devices with a microcontroller?
+  Use separate CS/SS lines for each device while sharing SCK, MOSI, and MISO lines. T
+  he microcontroller needs 3 GPIO pins for chip select plus the 3 shared SPI lines, totaling 6 pins.
+  
+  5. How is SPI full-duplex?
+  SPI is full-duplex because data transmission occurs simultaneously in both directions during each clock cycle. While the master sends data on MOSI, the slave can 
+  simultaneously send data back on MISO. Both devices can transmit and receive at the same time.
+  
+  6. Why does SPI require a separate SS/CS line for each slave?
+  Each slave needs its own chip select because SPI lacks addressing. The CS line tells a specific slave when to participate in communication. Without individual CS lines, 
+  all slaves would respond simultaneously, causing data collisions on the shared MISO line.
+  
+  7. Can multiple slaves be connected in SPI? How?
+  Yes, in two ways.
+  Independent slaves: Share SCK, MOSI, MISO but each has its own CS line
+  Daisy chain: Slaves connected in series where MISO of one connects to MOSI of the next, using only one CS line but requiring all slaves to support this mode.
+  
+  8. What is the maximum speed of SPI? What factors affect it?
+  SPI can theoretically reach speeds over 100MHz, but practical limits depend on: Microcontroller capabilities, Cable length and capacitance, Device specifications
+  
+  9. What happens if two SPI slaves respond simultaneously?
+  This causes bus contention on the MISO line, resulting in corrupted data, potential damage to output drivers, and communication failure. Proper CS management prevents this.
+  
+  10. How does the master initiate communication in SPI?
+  The master initiates by: 1) Pulling the target slave's CS low, 2) Generating clock pulses on SCK, 3) Sending data on MOSI if needed. Communication continues as long 
+  as CS is low and clock pulses are generated.
+  
+  11. How would you add more slaves to an SPI bus with limited GPIOs?
+  Use multiplexers/demultiplexers, shift registers for CS generation, or daisy-chain compatible devices. GPIO expanders via I2C can also provide additional CS lines.
+  
+  12. What are common issues in SPI communication and how do you debug them?
+  Common issues: incorrect wiring, mode mismatches, timing violations, signal integrity problems. Debug using oscilloscopes, logic analyzers, checking continuity, 
+  verifying timing parameters, and testing with known-good devices.
+  
+  13. What is meant by "bit-banging" SPI?
+  Bit-banging means manually controlling SPI signals using regular GPIO pins instead of hardware SPI peripherals. Software generates clock pulses and controls data lines, 
+  offering flexibility but consuming more CPU time and being slower.
+  
+  14. Can SPI be used for long-distance communication? Why or why not?
+  SPI is unsuitable for long distances due to signal degradation, increased capacitance causing slower rise/fall times, susceptibility to noise. 
+  
+I2C (Inter Integrated Circuit) Questions: Basic/Intermediate/Advanced
+
+  1. Why do we need pull-up resistors in I²C?
+  I²C uses open-drain/open-collector outputs that can only pull lines low, never drive them high. Pull-up resistors are essential to pull SDA and SCL lines to the high state when no device is actively pulling them low. 
+  Without pull-ups, the lines would float at undefined voltage levels, causing communication failure.
+  
+  2. Why do we need pull-up resistors in I²C?
+  I²C uses open-drain/open-collector outputs that can only pull lines low, never drive them high. Pull-up resistors are essential to pull SDA and SCL lines to the high state when no device is actively pulling them low. 
+  Without pull-ups, the lines would float at undefined voltage levels, causing communication failure.
+  
+  3. How does clock stretching work?
+  Clock stretching allows slaves to slow down communication by holding the SCL line low after the master releases it. The master must wait until SCL goes high before continuing. Slaves use this when they need more time to process data, access slow memory, or perform time-consuming operations. 
+  The master detects this by monitoring SCL after releasing it.
+  
+  4. What is the difference between 7-bit and 10-bit addressing in I²C?
+  7-bit addressing: Uses 7 bits for device address (128 possible addresses), transmitted in one byte with R/W bit. Most common format.
+  10-bit addressing: Uses 10 bits for device address (1024 possible addresses), requires two bytes - first byte has special pattern (11110XX) plus 2 MSBs of address, second byte contains remaining 8 address bits. Used when 
+  more devices needed on one bus.
+  
+  5. What is the significance of ACK and NACK in I²C communication?
+  ACK (Acknowledge): SDA pulled low during 9th clock pulse, indicates successful reception and readiness for more data
+  NACK (Not Acknowledge): SDA remains high during 9th clock pulse, indicates reception failure, slave busy, or end of data transfer (master sends NACK after final read byte). 
+  
+  6. What is clock stretching? When and why is it used?
+  Clock stretching lets slow slaves pause communication by holding SCL low. Used when slaves need extra time for:
+  Flash memory operations
+  ADC conversions
+  Complex calculations
+  Accessing slow external devices
+  Masters must support this by checking if SCL actually goes high after releasing it.
+  
+  7. What is the speed range of I²C?
+  Standard-mode: 100 kHz
+  Fast-mode: 400 kHz
+  Fast-mode Plus: 1 MHz
+  High-speed mode: 3.4 MHz (requires different electrical specifications)
+  Ultra Fast-mode: 5 MHz (latest specification)
+  
+  8. What happens if two masters try to communicate at the same time?
+  Both masters begin transmitting, and arbitration occurs bit-by-bit. The master transmitting the lower binary value wins and continues, while the losing master detects the conflict (reads '0' when outputting '1') 
+  and immediately stops. The process is transparent to slaves.
+  
+  9. Why does I²C require pull-up resistors? What happens if they are missing?
+  I²C devices use open-drain outputs that can only sink current (pull low), not source it. Pull-ups provide the return path to VCC. Without them, lines float at undefined voltages, causing erratic behavior, 
+  communication failures, and potential damage from floating inputs.
+  
+  10. What are the typical values of pull-up resistors in I²C?
+  Typical values are 1kΩ to 10kΩ. Selection depends on:
+  Bus capacitance (lower resistance for higher capacitance)
+  Supply voltage
+  Speed requirements
+  Number of devices
+  
+  11. How does multi-master communication work in I²C?
+  Multiple masters can coexist through arbitration. Each master monitors the bus before transmitting (bus must be idle). If collision occurs during transmission, arbitration resolves it non-destructively. 
+  Masters can also act as slaves when addressed by other masters.
+  
+  12. How would you handle a stuck bus condition (SDA/SCL held low)?
+  Recovery methods:
+  Generate up to 9 clock pulses on SCL to clear stuck slave transmission
+  Toggle SCL while monitoring SDA until it goes high
+  Power cycle problematic devices
+  Implement software bus reset routines
+  Use I²C bus recovery hardware features if available
+  
+  13. What are repeated start conditions and why are they used?
+  Repeated START allows masters to maintain bus control while changing communication direction or addressing different slaves without generating a STOP condition. Used for:
+  Reading from slaves after writing (write register address, then read data)
+  Atomic transactions
+  Preventing other masters from interrupting critical sequences
