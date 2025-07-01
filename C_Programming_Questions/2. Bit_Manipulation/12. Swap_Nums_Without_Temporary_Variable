@@ -1,0 +1,17 @@
+#include <stdio.h> 
+
+void swap_two_nums_without_temporary_var(int a, int b)
+{
+    a = a^b;
+    b = a^b;
+    a = a^b;
+    printf("Numbers after swapping: a = %d and b = %d \n", a, b);
+}
+
+int main()
+{
+    int a = 10, b = 15;
+    printf("Numbers before swapping are: a = %d and b = %d \n", a, b);
+    swap_two_nums_without_temporary_var(a,b);
+    return 0;
+}
