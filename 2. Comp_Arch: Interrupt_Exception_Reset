@@ -12,24 +12,92 @@
                  ↓ Context Save
             → Jumps to Handler (ISR/Exception Vector)
 
-11. Exceptions vs Interrupts vs Reset
+1. Exceptions vs Interrupts vs Reset
 
-  11.1 Exception
-  a. What: An internal event that disrupts the normal execution flow.
-  b. Why it occurs: Software or CPU-level error (e.g., divide by zero, invalid opcode).
-  c. What happens: CPU suspends current instruction, Saves context (PC, registers), Jumps to exception handler (vector table), Handler runs and resumes execution.
-  d. Handled by: Exception handler routines (logging, recovery, reboot).
+  1.1. Exception
+     - What: An internal, synchronous event disrupting normal execution.
+     - Cause: Faulty instructions (e.g., divide by zero, page fault).
+     - Type: Internal, Software-triggered, Synchronous.
+     - Triggered By: CPU detecting an issue during instruction execution.
+     - Handler: Exception vector table → exception handler routine.
+     - Action: 
+       ▸ CPU saves context (PC, registers).
+       ▸ Jumps to exception handler.
+       ▸ May resume execution after handling.
+     - Examples: Invalid opcode, segmentation fault, FPU error.
   
-  11.2 Interrupt
-  a. What: An asynchronous event (internal or external) that requests CPU attention.
-  b. Why it occurs: I/O events (hardware interrupt: keyboard, mouse) or software interrupt (system call).
-  c. What happens: CPU suspends current task, Saves context, Jumps to interrupt vector, Runs ISR (Interrupt Service Routine).
+  1.2. Interrupt
+     - What: An asynchronous event signaling for CPU attention.
+     - Cause: External I/O (hardware) or internal software request (e.g., syscall).
+     - Type:
+       ▸ Hardware Interrupt: External, Hardware-triggered, Asynchronous.
+       ▸ Software Interrupt: Internal, Software-triggered, Synchronous.
+     - Triggered By:
+       ▸ External devices (keyboard, timer, network card).
+       ▸ Software issuing a trap or syscall instruction.
+     - Handler: Interrupt vector → ISR (Interrupt Service Routine).
+     - Action:
+       ▸ CPU saves context.
+       ▸ Services the interrupt.
+       ▸ Returns to main task (usually).
+     - Examples: Timer tick, disk I/O complete, system call trap.
   
-  11.3 Reset
-  a. What: Brings the system back to initial known state.
-  b. Why it occurs: Power-on, critical failure, watchdog timeout.
-  c. What happens:
-    Clears most registers.
-    Jumps to reset vector.
-    Executes boot code.
-  d. Effect: Full system restart unlike exception (localized handling).
+  1.3. Reset
+     - What: System-wide restart to known initial state.
+     - Cause: Power-on, hardware failure, watchdog timeout.
+     - Type: Internal or External, Hardware-triggered, Asynchronous.
+     - Triggered By:
+       ▸ Power cycle (on/off switch).
+       ▸ Watchdog timer expiry.
+       ▸ Reset pin pulled LOW.
+     - Handler: Reset vector → bootloader or startup code.
+     - Action:
+       ▸ Clears most registers/memory.
+       ▸ Initializes peripherals.
+       ▸ Loads and begins OS or firmware.
+     - Examples: Cold boot, reboot after crash, manual reset button.
+
+2. SOME MORE DEFINITIONS
+Internal Event
+- Definition: Triggered by the CPU due to faults or special conditions during instruction execution.
+- Examples:
+- Divide by zero
+- Invalid instruction opcode
+- Page fault (accessing inaccessible memory)
+
+ External Event
+- Definition: Initiated by devices or components outside the CPU core.
+- Examples:
+- Keyboard input
+- Timer expiry
+- Network packet arrival
+
+Hardware Triggered
+- Definition: Caused by physical hardware signals, either internal peripherals or external devices.
+- Examples:
+- Timer peripheral overflow
+- External button (GPIO interrupt)
+- Watchdog timer expiry
+
+Software Triggered
+- Definition: Deliberately invoked by software using special instructions.
+- Examples:
+- System call (SVC, INT)
+- Debug trap (breakpoint)
+- Raising a software interrupt for OS services
+
+Synchronous Event
+- Definition: Happens in sync with instruction execution—at a precise point in the program.
+- Nature: Predictable and repeatable.
+- Examples:
+- Divide by zero
+- System call instruction
+- Illegal memory access (page fault)
+
+Asynchronous Event
+- Definition: Occurs independently of the program counter—can interrupt at any time.
+- Nature: Unpredictable and externally driven.
+- Examples:
+- Timer interrupt
+- Keyboard or mouse activity
+- Network interface card signaling packet reception
