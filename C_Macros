@@ -1,0 +1,82 @@
+MACRO - INTRODUCTION 
+- A macro in C is a piece of code that is replaced by the pre-processor before the actual compilation begins. 
+- The C processor scans your code for lines starting with # and then processes them before the compiler ever sees your code.
+
+HOW THE PRE-PROCESSOR WORKS 
+Source Code > Pre-Processor > Expanded Code > Compiler > Object Code 
+The pre-processor handles #define, #include, #ifdef etc. Compiler receives pre-processed code. Macros are completely gone by compilation time. 
+
+BASIC C MACROS 
+
+  1. CONSTANT MACROS 
+  #include <stdio.h> 
+  #define PI 3.14 
+  int main()
+  {
+    int x = 10;
+    float area = PI*x*x;
+    printf("%.2f",area);
+    return 0;
+  }
+  
+  2. FUNCTION LIKE MACROS 
+  #include <stdio.h> 
+  #define SQUARE(x) ((x)*(x))
+  
+  int main()
+  {
+    int x = 10; 
+    printf("Square of %d is %d",x,SQUARE);
+    return 0; 
+  }
+  
+  3. CONDITIONAL MACROS 
+  #define SENSOR_ENABLED
+  
+  #ifdef SENSOR_ENABLED
+      init_sensor();
+  #else
+      printf("Sensor not available\n");
+  #endif
+  
+  4. REALISTIC MACRO EXAMPLE - How To Blink An LED 
+  #include <stdio.h>
+  #include <stdint.h>
+  
+  #define GPIO_BASE         0x40020000U
+  
+  #define REG32(addr)       (*(volatile uint32_t *)(addr)) //to dereference a 32-bit volatile memory address
+  
+  #define GPIO_MODER        REG32(GPIO_BASE + 0x00U) //mode register - each pin has two bits to define mode 
+  #define GPIO_ODR          REG32(GPIO_BASE + 0x14U) //output data register 
+  
+  #define LED_Pin           15
+  #define LED_Mask          (1U << LED_Pin)
+  
+  #define LED_DIR_Output() \
+      do { \
+          GPIO_MODER &= ~(0x3U << (LED_Pin * 2)); \
+          GPIO_MODER |=  (0x1U << (LED_Pin * 2)); \
+      } while(0)
+  
+  #define LED_SET()         (GPIO_ODR |= LED_Mask)
+  #define LED_CLEAR()       (GPIO_ODR &= ~LED_Mask)
+  #define LED_TOGGLE()      (GPIO_ODR ^= LED_Mask)
+  
+  void delay(void)
+  {
+      volatile int i;
+      for (i = 0; i < 100000; i++);
+  }
+  
+  int main()
+  {
+      LED_DIR_Output(); //set direction 
+  
+      while (1)
+      {
+          LED_TOGGLE(); //toggle 
+          delay(); //wait
+      }
+      return 0;
+  }
