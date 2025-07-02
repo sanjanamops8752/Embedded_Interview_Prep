@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Stack
+{
+    int cap, top; //capacity of stack, index of top element
+    int *a; ////pointer to array storing the values 
+};
+
+struct Stack *CreateStack(int cap)
+{
+    struct Stack *NewStack = (struct Stack *)malloc(sizeof(struct Stack));
+    NewStack->cap = cap;
+    NewStack->top = -1; //initialize empty Stack
+    NewStack->a = (int *)malloc(cap * sizeof(int));
+    return NewStack;
+}
+
+void DeleteStack(struct Stack *NewStack)
+{
+    free(NewStack->a); //free data in the stack 
+    free(NewStack); //free memory allocated to the stack
+}
+
+int IsFull(struct Stack *NewStack)
+{
+    return NewStack->top >= NewStack->cap - 1; //returns 1 if true, stack full
+}
+
+int IsEmpty(struct Stack *NewStack)
+{
+    return NewStack->top < 0; //returns 1 if top is negative, stack empty
+}
+
+void Push(struct Stack *NewStack, int x)
+{
+    if (IsFull(NewStack))
+    {
+        printf("Stack Overflow\n");
+        return;
+    }
+    NewStack->a[++NewStack->top] = x;
+}
+
+int Pop(struct Stack *NewStack)
+{
+    if (IsEmpty(NewStack))
+    {
+        printf("Stack Underflow\n");
+        return -1;
+    }
+    return NewStack->a[NewStack->top--];
+}
+
+int Peek(struct Stack *NewStack)
+{
+    if (IsEmpty(NewStack))
+    {
+        printf("Stack is Empty\n");
+        return -1;
+    }
+    return NewStack->a[NewStack->top];
+}
+
+int main()
+{
+    struct Stack *s = CreateStack(5);
+    Push(s, 1);
+    Push(s, 2);
+    Push(s, 3);
+    printf("Top element is %d\n", Peek(s)); //should print 3
+    Pop(s); //removes 3
+    printf("Top after pop is %d\n", Peek(s)); //should print 2
+    DeleteStack(s); //free memory
+    return 0;
+}
