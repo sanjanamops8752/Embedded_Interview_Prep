@@ -48,6 +48,11 @@
     b. Branch Prediction: CPU guesses next instruction for better pipelining.
     c. Speculative Execution: Pre-executes instructions ahead of time.
 
+CPU vs Chipset 
+CPU -  decision-maker—it runs your programs, crunches numbers, and controls the system’s logic.
+Chipset - traffic controller of the motherboard. Manages communication between the CPU and other components like RAM, storage, USB,
+PCIe devices, etc.
+
 3. Memory System in Computers
 
   3.1 Hierarchical Structure (from fastest to slowest):
@@ -154,6 +159,10 @@
     c. [Heap Segment]   - malloc() memory
     d. [Stack Segment]  - Local variables, function calls
 
+DDR (Double Data Rate) is main memory (RAM), not a peripheral.
+- It connects directly to the memory controller, often integrated into the CPU.
+- It provides volatile, high-speed storage for active programs and data.
+
 9. System Boot Process
 
   9.1 Flow
@@ -182,3 +191,56 @@
     .elf: Executable with debug info
     .hex: For microcontrollers (Intel hex format)
     .bin: Raw binary to flash
+
+11. Peripherals
+Peripherals are external or internal devices that connect to the CPU to extend its capabilities. 
+In embedded systems, peripherals are often on-chip (like UART, ADC, timer) or off-chip and can be connected by interfaces 
+like PCIe or SATA. 
+
+11.1 Core Peripherals and What They Do 
+  a. GPIO - reads digital inputs, sets output - eg button presses, led control 
+  b. Timers/Counters - tracks time, generate delay or count events - eg motor control 
+  c. PWM (Pulse Width Modulation) - simulates analog output based on digital signals 
+  d. ADC and DAC 
+  e. UART, SPI, I2C 
+  f. WDT (Watchdog Timer) - resets MCU if it hangs 
+  g. DMA (Direct Memory Access) - moves data without CPU involvement 
+  h. Interrupt Controller - handles internal/external events 
+
+11.2 Why Peripherals Matter? 
+  Without peripherals, an MCU would just be a brain with no senses or limbs. Peripherals give it the ability to:
+  - Sense the environment (via ADC, GPIO)
+  - Communicate with other devices (via UART, SPI, I2C)
+  - Act on the world (via PWM, GPIO)
+  - Manage time and events (via Timers, Interrupts)
+  - Stay safe and efficient (via Watchdog, DMA)
+
+11.3 How To Connect Off-Chip Peripherals? PCIe, SATA, USB  
+a. PCIe (Peripheral Component Interconnect Express) - High-speed serial bus - connects GPUs, NVMe SSDs, Network Cards
+b. SATA (Serial ATA) - Storage interface - connects HDDs, SATA SSDs, Optical Drives - slower than PCIe 
+c. USB (Universal Serial Bus) - connects Flash drives, webcams, etc.
+             +------------------+
+             |     CPU Core     |
+             +--------+---------+
+                      |
+              +-------+--------+
+              | Memory Controller |
+              +-------+--------+
+                      |
+                +-----+-----+
+                |   DDR RAM  |
+                +-----------+
+
+                      |
+              +-------+--------+
+              |   Chipset /    |
+              |   Platform     |
+              |   Controller   |
+              +-------+--------+
+                      |
+        +-------------+-------------+
+        |                           |
+   +----+----+               +------+------+
+   |  PCIe    |              |    SATA     |
+   | Devices  |              |  Storage    |
+   +---------+               +-------------+
