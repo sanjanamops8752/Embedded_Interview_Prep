@@ -48,6 +48,12 @@ COMMUNICATION PROTOCOLS
      Timing mismatch is a common problem in asynchronous communication. This happens when the sender and receiver's clocks differ slightly. 
      This is why the baud rate must match. 
 
+Serial Vs Parallel Communication 
+Serial - Data is transmitted one bit at a time over a single wire or channel, great for long distance communication, no cross talk. 
+         Slower than parallel communication, needs synchronization. 
+         Ex - UART, I2C, SPI
+Parallel - Data is transmitted multiple bits at once, each on its own wire. Faster and used for short distance communication. 
+
 3. Simplex, Half-Duplex and Full-Duplex Communication 
    Communication modes define the direction of data flow between devices. 
    a. Simplex Communication - allows data to flow in only one direction — from the sender to the receiver — with no possibility of reverse communication. 
