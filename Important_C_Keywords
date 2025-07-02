@@ -1,0 +1,126 @@
+1. CONST KEYWORD
+  Tells the compiler that a variable's value must not be changed after initialization. 
+  It helps in protecting critical values from accidental modifications. 
+  
+  Example 1: 
+    #include <stdint.h>
+    
+    const float TEMP_SENSOR_SCALE = 0.01f;  // volts per degree Celsius
+    
+    float read_temperature(uint16_t adc_value) {
+        return adc_value * TEMP_SENSOR_SCALE;
+    }
+  
+  Example 2: 
+    const int *ptr1;     // pointer to const int (data is const)
+    int *const ptr2;     // const pointer to int (address is const)
+    const int *const ptr3; // const pointer to const int
+
+2. VOLATILE KEYWORD 
+  Tells the compiler - “Hey, don’t assume this variable stays the same—read it fresh from memory every time!”
+  
+  Example 1: 
+    volatile int data_ready = 0;
+    
+    void ISR_Handler() {
+        data_ready = 1;  //Set by interrupt- signaling to the main program that the event has happened
+    }
+
+    int main() {
+        while (!data_ready);  //main program enters a busy-wait loop, keeps checking data_ready until it becomes 1
+        //Once the ISR sets the flag, the loop exits (or would continue to the next instruction if there were one).
+    }
+
+3. STATIC KEYWORD 
+
+  Example 1: Static Variable Inside A Function 
+    #include <stdio.h>
+    
+    void counter() {
+        static int count = 0;  // Initialized only once
+        count++;
+        printf("Called %d times\n", count);
+    }
+    
+    int main() {
+        counter();  // Output: Called 1 times
+        counter();  // Output: Called 2 times
+        counter();  // Output: Called 3 times
+        return 0;
+    }
+  
+  Example 2: Static Global Variable 
+    // file: sensor.c
+    static int sensor_id = 42;  // Only visible in this file
+    
+    Example 3: Static Function 
+    static void init_timer() {
+        // Only callable within this file
+    }
+
+4. EXTERN KEYWORD 
+  Tells the compiler - “This variable or function exists, but it’s defined in another file.”
+  
+  Example 1: Sharing A Global Variable 
+    In config.c 
+    int system_mode = 1;  // Definition
+    In main.c 
+    #include <stdio.h>
+    
+    extern int system_mode;  // Declaration - tells compiler to look for this variable elsewhere during linking 
+    
+    int main() {
+        printf("Mode: %d\n", system_mode);
+        return 0;
+    }
+
+5. INLINE KEYWORD 
+  Tells compiler - “Instead of calling this function, just paste its code wherever it’s used.”
+  Reduces function call overhead. 
+  
+  Example 1:
+    inline int square(int x) {
+        return x * x;
+    }
+    
+    int main() {
+        int result = square(5);  // May be replaced with: int result = 5 * 5;
+    }
+
+6. GLOBAL AND LOCAL 
+Example 1: Global Variable 
+#include <stdio.h>
+
+int counter = 0;  // Global variable
+
+void increment() {
+    counter++;
+}
+
+int main() {
+    increment();
+    printf("Counter: %d\n", counter);  // Output: 1
+    return 0;
+}
+
+Example 2: Local Variable
+#include <stdio.h>
+
+void greet() {
+    int local_count = 5;  // Local variable
+    printf("Local count: %d\n", local_count);
+}
+
+int main() {
+    greet();
+    // printf("%d", local_count);  //Error: not visible here
+    return 0;
+}
+
+Example 3: When both collide 
+int value = 10;  // Global
+
+void test() {
+    int value = 5;  // Local shadows global
+    printf("%d\n", value);  // Output: 5
+}
