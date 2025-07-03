@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node 
+{
+    int data;
+    struct Node *next;
+};
+
+// Function to create a new node with given data
+struct Node *CreateNode(int new_data)
+{
+    struct Node *new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->next = NULL;
+    return new_node;
+}
+
+// Function to traverse and print the list
+void TraverseList(struct Node *head)
+{
+    struct Node *current = head;
+    while(current != NULL)
+    {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+// ✅ Function to calculate length of linked list
+int GetLength(struct Node *head)
+{
+    int count = 0;
+    struct Node *current = head;
+
+    while(current != NULL)
+    {
+        count++;
+        current = current->next;
+    }
+
+    return count;
+}
+
+int main()
+{
+    // Creating a linked list: 10 -> 20 -> 30
+    struct Node *head = CreateNode(10);
+    head->next = CreateNode(20);
+    head->next->next = CreateNode(30);
+
+    // Traversing the list
+    TraverseList(head);
+
+    // Getting and printing the length
+    int length = GetLength(head);
+    printf("Length of the linked list is: %d\n", length);
+
+    return 0;
+}
