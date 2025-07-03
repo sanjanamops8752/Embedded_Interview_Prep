@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *CreateNode(int val) {
+    struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+    node->data = val;
+    node->next = NULL;
+    return node;
+}
+
+void TraverseList(struct Node *head) {
+    struct Node *current = head;
+    while (current) {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+void ReverseList(struct Node **head_ref)
+{
+    struct Node *prev = NULL;
+    struct Node *current = *head_ref;
+    struct Node *next = NULL;
+
+    while (current != NULL)
+    {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+
+    *head_ref = prev;
+}
+
+int main()
+{
+    struct Node *head = CreateNode(10);
+    head->next = CreateNode(20);
+    head->next->next = CreateNode(30);
+    head->next->next->next = CreateNode(40);
+
+    printf("Original list:\n");
+    TraverseList(head);
+
+    ReverseList(&head);
+
+    printf("Reversed list:\n");
+    TraverseList(head);
+
+    return 0;
+}
