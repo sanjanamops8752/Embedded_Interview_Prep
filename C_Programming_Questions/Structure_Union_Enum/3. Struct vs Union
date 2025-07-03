@@ -1,0 +1,6 @@
+Struct - User defined data type in which each member has its own member space. Size is sum of sizes of all members. 
+        All members can hold value at once. 
+        Example - GPIO Config 
+Union - User defined data type where members have a shared memory space. Size is that of largest number. 
+        Only one member can hold value at once. 
+        Example - multiple sensors but only one sensor valid at a time. 
