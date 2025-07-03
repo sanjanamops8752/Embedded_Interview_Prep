@@ -23,7 +23,7 @@ int main() {
     return 0;
 }
 
-Example 2: Enum
+Example 2: Enum - An enum (enumeration) assigns names to a set of integer values, starting from 0 by default.
 #include <stdio.h>
 
 enum Day {
