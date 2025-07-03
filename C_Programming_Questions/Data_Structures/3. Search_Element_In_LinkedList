@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h> 
+
+struct Node 
+{
+    int data;
+    struct Node *next;
+};
+
+struct Node *CreateNode(int new_data)
+{
+    struct Node *new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->next = NULL;
+    return new_node;
+}
+
+bool SearchElement(struct Node *head, int key)
+{
+    struct Node *current = head;
+    while(current != NULL)
+    {
+        if(current->data == key)
+        {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+int main()
+{
+    struct Node *head = CreateNode(10);
+    head->next = CreateNode(20);
+    head->next->next = CreateNode(30);
+    int key = 30;
+    if(SearchElement(head, key))
+    {
+        printf("Element present in the list \n");
+    }
+    else
+    {
+        printf("Element not present \n");
+    }
+    return 0;
+}
