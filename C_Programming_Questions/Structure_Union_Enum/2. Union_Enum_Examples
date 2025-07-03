@@ -1,0 +1,88 @@
+Example 1: UNION
+#include <stdio.h>
+
+union Data {
+    int i;
+    float f;
+    char c;
+};
+
+int main() {
+    union Data d;
+
+    d.i = 10;
+    printf("d.i = %d\n", d.i);
+
+    d.f = 3.14;
+    printf("d.f = %f\n", d.f);  // This will overwrite the int value
+
+    d.c = 'A';
+    printf("d.c = %c\n", d.c);  // This will overwrite the float value
+
+    // Accessing d.i or d.f now would give garbage values
+    return 0;
+}
+
+Example 2: Enum
+#include <stdio.h>
+
+enum Day {
+    MON, TUE, WED, THU, FRI, SAT, SUN
+};
+
+int main() {
+    enum Day today = WED;
+
+    if (today == WED) {
+        printf("Midweek!\n");
+    }
+
+    printf("Numeric value of WED = %d\n", today);  // Will print 2
+    return 0;
+}
+
+Example 3: 
+#include <stdio.h>
+
+union SensorValue {
+    float temperature;    // in Celsius
+    int lightIntensity;   // in Lux
+    char doorStatus;      // 'O' for open, 'C' for closed
+};
+
+enum SensorType {
+    TEMP_SENSOR,
+    LIGHT_SENSOR,
+    DOOR_SENSOR
+};
+
+struct Sensor {
+    enum SensorType type;
+    union SensorValue value;
+};
+
+void printSensor(struct Sensor s) {
+    switch (s.type) {
+        case TEMP_SENSOR:
+            printf("Temperature: %.2f C\n", s.value.temperature);
+            break;
+        case LIGHT_SENSOR:
+            printf("Light Intensity: %d Lux\n", s.value.lightIntensity);
+            break;
+        case DOOR_SENSOR:
+            printf("Door Status: %c\n", s.value.doorStatus);
+            break;
+    }
+}
+
+int main() {
+    struct Sensor s1 = { TEMP_SENSOR, .value.temperature = 25.6 };
+    struct Sensor s2 = { LIGHT_SENSOR, .value.lightIntensity = 800 };
+    struct Sensor s3 = { DOOR_SENSOR, .value.doorStatus = 'C' };
+
+    printSensor(s1);
+    printSensor(s2);
+    printSensor(s3);
+
+    return 0;
+}
