@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node 
+{
+    int data;
+    struct Node *next;
+};
+
+struct Node *CreateNode(int new_data)
+{
+    struct Node *new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->next = NULL;
+    return new_node;
+}
+
+void TraverseList(struct Node *head)
+{
+    struct Node *current = head;
+    while(current != NULL)
+    {
+        printf("%d -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+void SearchElement(struct Node *head, int key)
+{
+    struct Node *current = head;
+    int pos = 1;
+    while(current != NULL)
+    {
+        if(current->data == key)
+        {
+            printf("%d is present at position %d\n", key, pos);
+            return;
+        }
+        current = current->next;
+        pos++;
+    }
+    printf("%d not found in the list\n", key);
+}
+
+int main()
+{
+    struct Node *head = CreateNode(10);
+    head->next = CreateNode(20);
+    head->next->next = CreateNode(30);
+
+    int key = 30;
+
+    TraverseList(head);
+    SearchElement(head, key);
+
+    return 0;
+}
