@@ -33,6 +33,7 @@
 
 3. STATIC KEYWORD 
 
+  Retains its value between function calls 
   Example 1: Static Variable Inside A Function 
     #include <stdio.h>
     
