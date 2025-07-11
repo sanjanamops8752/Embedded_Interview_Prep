@@ -1,0 +1,26 @@
+#include <stdio.h> 
+
+void find_subarray_with_sum(int *arr, int size, int sum)
+{
+    for (int i = 0; i < size; i++)
+    {
+        int current_sum = 0;
+        for (int j = i; j < size; j++)
+        {
+            current_sum += arr[j];
+            if (current_sum == sum)
+            {
+                printf("Subarray from index %d to %d\n", i, j);
+            }
+        }
+    }
+}
+
+int main()
+{
+    int arr[] = {5,2,0,3,7,0};
+    int size = sizeof(arr)/sizeof(arr[0]);
+    int sum = 7;
+    find_subarray_with_sum(arr,size,sum);
+    return 0;
+}
