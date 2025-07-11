@@ -1,0 +1,28 @@
+#include <stdio.h> 
+
+int check_if_sorted(int *arr,int size)
+{
+    for(int i=1;i<size;i++)
+    {
+        if(arr[i-1]>arr[i])
+        {
+            return 1;
+        }
+    }
+    return -1;
+}
+
+int main()
+{
+    int arr[] = {12,6,79,10,1};
+    int size = sizeof(arr)/sizeof(arr[0]);
+    if(check_if_sorted(arr,size))
+    {
+        printf("Array is not sorted \n");
+    }
+    else
+    {
+        printf("Array is sorted \n");
+    }
+    return 0;
+}
