@@ -1,7 +1,5 @@
 #include <stdio.h> 
 
-#include <stdio.h>
-
 void left_rotate_by_k(int *arr, int size, int k)
 {
     k = k % size; //to handle k > size
