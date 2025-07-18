@@ -1,0 +1,268 @@
+1. OPERATING SYSTEM : INTRODUCTION 
+- Intermediate between hardware and software applications. 
+- OS is a software that manages resources (like CPU, memory storage, I/O devices) enabling applications to run efficiently by hiding the hardware complexity.
+
+1.1. KEY FUNCTIONS OF AN OS 
+a. Process Management: manages processes (programs in execution), multitasking, scheduling and resource allocation. 
+Example: In a smartphone OS like Android, processes such as the phone app, messaging app, and music player run simultaneously. The OS allocates CPU time to each process, ensuring 
+smooth multitasking without any one process hogging the CPU. 
+
+b. Memory Management : manages system memory, including both physical and virtual memory.
+Example: In a gaming console like the PlayStation, the OS must manage memory efficiently to load game data quickly. The virtual memory allows large games to run even on 
+consoles with limited physical RAM, by swapping portions of the game from disk storage to RAM as needed.
+
+c. File Management : handles the reading, writing, and storing of data, and ensures proper access control and file organization.
+Example: On a laptop or desktop, the OS manages files stored on a hard drive or SSD. For instance, Windows File Explorer lets you access files, organize them into folders, 
+and manage permissions like read and write access.
+
+1.2 TYPES OF OS 
+a. Batch OS : Executes jobs in batches without user interaction. Eg: IBM’s mainframe 
+b. Distributed OS : Manages a collection of separate computers and makes them appear as a single system to the user. Eg: Google’s Android 
+c. RTOS : Provides immediate processing and guaranteed response times, used in embedded systems or safety-critical applications.
+d. Netwrok OS :  Manages networking and provides services over a network. Eg: Windows Server, Linux 
+
+1.3 OS vs Hardware 
+- Hardware provides the raw computing resources (CPU, memory, storage, etc.).
+- The OS manages these resources and provides an abstraction layer so that software can run without directly interacting with the hardware.
+- Example: In an embedded system like a smart refrigerator, the OS abstracts away the complexity of managing the temperature sensors, motors, and display screens, allowing the fridge to run efficiently.
+
+2. SYSTEM ARCHITECTURE 
+
+2.1 HAL (Hardware Abstraction Layer) 
+- It provides a uniform interface to higher-level software so that the OS can run on different hardware platforms without needing to be rewritten. 
+- For example, HAL allows OS code to interact with different CPUs, memory configurations, and I/O devices without needing to know specific details about the hardware.
+- Example: The HAL in Android allows the OS to run on various devices from different manufacturers (Samsung, Google, Xiaomi) without needing to modify the core OS for 
+  each device’s unique hardware components (e.g., camera, sensors).
+
+2.2 USER VS KERNEL 
+-  The kernel is the part of the operating system that runs with higher privileges while user (space) usually means by applications running with low privileges.
+- User mode and kernel mode are terms that may refer specifically to the processor execution mode. 
+- Code that runs in kernel mode can fully control the CPU while code that runs in user mode has certain limitations. For example, local CPU interrupts can only be disabled or enable
+while running in kernel mode. If such an operation is attempted while running in user mode an exception will be generated and the kernel will take over to handle it.
+- The kernel space is accessed protected so that user applications can not access it directly, while user space can be directly accessed from code running in kernel mode.
+
+2.3 TYPICAL OPERATING SYSTEM ARCHITECTURE 
+Applications
+↓
+System Call Interface (SCI)
+↓
+Kernel
+   ├── Process Management
+   ├── Memory Management
+   ├── File Systems
+   ├── Network Stack
+   └── Scheduling
+↓
+Device Drivers
+↓
+Hardware
+
+- The kernel offers a set of APIs that applications issue which are generally referred to as "System Calls". 
+These APIs are different from regular library APIs because they are the boundary at which the execution mode switch from user mode to kernel mode.
+
+- The kernel code itself can be logically separated in core kernel code and device drivers code. Device drivers code is responsible of accessing particular devices while 
+the core kernel code is generic. 
+- The core kernel can be further divided into multiple logical subsystems (e.g. file access, networking, process management, etc.)
+
+2.4 MONILITHIC KERNEL 
++-------------------------+
+|    User Applications    |
++-------------------------+
+              ↓
++-------------------------+
+|   System Call Interface |
++-------------------------+
+              ↓
++====================================+
+|            Monolithic Kernel       |
+|  - Process Management              |
+|  - Memory Management               |
+|  - File System                     |
+|  - Device Drivers                  |
+|  - Network Stack                   |
+|  - Interprocess Communication      |
+|  - System Services                 |
++====================================+
+              ↓
++-------------------------+
+|         Hardware        |
++-------------------------+
+
+A monolithic kernel is an operating system architecture where all core services run in the same privileged memory space—the kernel space. This includes components like:
+- Process and memory management
+- File systems
+- Device drivers
+- Networking stack
+- System services
+Because everything operates within a unified address space, the kernel can execute system calls and manage resources without needing inter-process communication (IPC) between separate modules.
+
+2.5 MICRO KERNEL 
+A microkernel is a minimalist operating system kernel that includes only the most essential services needed to manage hardware and system resources. 
+Everything else—like device drivers, file systems, and network protocols—is moved out of the kernel and runs in user space as separate processes.
+
+Core Functions of a Microkernel:
+- Inter-process communication (IPC)
+- Basic memory management
+- CPU scheduling
+These are the bare minimum needed to keep the system running. 
+All other services interact with the microkernel via message passing, which helps isolate faults and improve system stability.
+
+- One of the advantages of this architecture is that the services are isolated and hence bugs in one service won't impact other services.
+
+As such, if a service crashes we can just restart it without affecting the whole system. 
+However, in practice this is difficult to achieve since restarting a service may affect all applications that depend on that service 
+(e.g. if the file server crashes all applications with opened file descriptors would encounter errors when accessing them).
+
+2.6 ADDRESS SPACE 
+- The physical address space refers to the way the RAM and device memories are visible on the memory bus.
+- The virtual address space (or sometimes just address space) refers to the way the CPU sees the memory when the virtual memory module is activated 
+(sometime called protected mode or paging enabled). The kernel is responsible of setting up a mapping that creates a virtual address space in which areas of this space are mapped to certain physical memory areas.
+- Related to the virtual address space there are two other terms that are often used: process (address) space and kernel (address) space.
+- The process space is (part of) the virtual address space associated with a process. It is the "memory view" of processes. It is a continuous area that starts at zero. 
+Where the process's address space ends depends on the implementation and architecture.
+- The kernel space is the "memory view" of the code that runs in kernel mode.
+
++------------------------------------------+
+|          Virtual Address Space           |  ← Used by processes
+|------------------------------------------|
+|  User Space (apps, user-level code)      |  ← Lower memory range
+|    - Stack                               |
+|    - Heap                                |
+|    - Code/Text Segment                   |
+|    - Shared Libraries                    |
+|                                          |
+|  --------------------------------------  |
+|  Kernel Space (OS services, drivers)     |  ← Higher memory range
+|    - Kernel Code                         |
+|    - Kernel Data                         |
+|    - Interrupt Tables                    |
+|    - Memory-Mapped I/O                   |
++------------------------------------------+
+              ↓ Translation by MMU
++------------------------------------------+
+|          Physical Address Space          |  ← Actual RAM / peripherals
+|------------------------------------------|
+|  Physical RAM                            |
+|  Reserved HW Regions (e.g., Flash, I/O)  |
+|  Memory-Mapped Devices                   |
++------------------------------------------+
+
+2.7 EXECUTION CONTEXTS 
+- One of the most important jobs of the kernel is to service interrupts and to service them efficiently. 
+- Code running in interrupt context always runs in kernel mode and there are certain limitations that the kernel programmer has to be aware of (e.g. not calling blocking functions or accessing user space).
+- Opposed to interrupt context there is process context. Code that runs in process context can do so in user mode (executing application code) or 
+in kernel mode (executing a system call).
+
+2.8 MULTITASKING 
+- Multitasking is the ability of the operating system to "simultaneously" execute multiple programs. It does so by quickly switching between running processes.
+- Cooperative multitasking requires the programs to cooperate to achieve multitasking. 
+A program will run and relinquish CPU control back to the OS, which will then schedule another program.
+- With preemptive multitasking the kernel will enforce strict limits for each process, so that all processes have a fair chance of running. Each process is allowed to run a time slice 
+(e.g. 100ms) after which, if it is still running, it is forcefully preempted and another task is scheduled.
+
+2.9 ASMP vs SMP 
+Asymmetric Multiprocessing 
+- A system where processors are assigned specific roles, often in a master-slave configuration. One processor (master) handles OS tasks and scheduling, while others (slaves) 
+execute assigned tasks.
+
++-----------------------------+
+|     Master Processor        |  ← Handles OS, scheduling
++-----------------------------+
+              ↓
++-----------------------------+
+|     Slave Processor(s)      |  ← Executes assigned tasks
++-----------------------------+
+              ↓
++-----------------------------+
+|        Shared Memory        |
++-----------------------------+
+              ↓
++-----------------------------+
+|         I/O Devices         |
++-----------------------------+
+
+Symmetric Multiprocessing 
+- A system where all processors are treated equally and share access to memory and I/O. The OS can schedule any task on any processor.
+
++-----------------------------+
+|     Processor 1             |
++-----------------------------+
+|     Processor 2             |
++-----------------------------+
+|     Processor N             |
++-----------------------------+
+        ↓     ↓     ↓
++-----------------------------+
+|        Shared Memory        |
++-----------------------------+
+              ↓
++-----------------------------+
+|         I/O Devices         |
++-----------------------------+
+
+3. SYSTEM CALLS 
+- At a high level system calls are "services" offered by the kernel to user applications and they resemble 
+library APIs in that they are described as a function call with a name, parameters, and return value.
+- However, on a closer look, we can see that system calls are actually not function calls, but specific assembly instructions (architecture and kernel specific) that do the following:
+  a. setup information to identify the system call and its parameters
+  b. trigger a kernel mode switch
+  c. retrieve the result of the system call
+
+4. PROCESSES 
+- A process is a program in execution, consisting of the program code, its current activity (like the value of registers), and the state of its resources.
+- A process typically includes:
+a. Program Counter (PC): Indicates the next instruction to be executed.
+b. Stack: Stores temporary data like function parameters, return addresses, and local variables.
+c. Data Section: Contains global variables and dynamically allocated memory.
+c. Heap: Used for dynamic memory allocation.
+d. Process Control Block (PCB): A data structure used by the OS to store information about a process (e.g., its ID, state, program counter, and memory allocation).
+
+5. THREADS
+- A thread is the basic unit that the kernel process scheduler uses to allow applications to run the CPU. A thread has the following characteristics:
+a. Each thread has its own stack and together with the register values it determines the thread execution state
+b. A thread runs in the context of a process and all threads in the same process share the resources
+c. The kernel schedules threads not processes and user-level threads (e.g. fibers, coroutines, etc.) are not visible at the kernel level
+
+6. CONTEXT SWITCHING 
+
+7. BLOCKING AND WAKING UP TASKS 
+
+8. PRE-EMPTING TASKS 
+a. Non preemptive kernel
+- At every tick the kernel checks to see if the current process has its time slice consumed
+- If that happens a flag is set in interrupt context
+- Before returning to userspace the kernel checks this flag and calls schedule() if needed
+- In this case tasks are not preempted while running in kernel mode (e.g. system call) so there are no synchronization issues
+
+b. Pre_Emptive Kernel and Context Switching (IMPORTANT)
+- In a preemptive multitasking OS, the system relies on a hardware timer—such as the SysTick in ARM Cortex-M.
+These interrupts occur at fixed intervals, say every 1ms, creating a consistent heartbeat that the kernel uses to keep track of time. This heartbeat is often called a "tick."
+- When a process is running, the kernel keeps track of how many ticks it has consumed.
+- Each process has a time slice (also called a time quantum)—a fixed number of ticks it’s allowed to run before being preempted.
+- At every tick, the kernel checks: Has the current process used up its time slice? Is there another process in the ready queue waiting to run?
+- If yes, the scheduler triggers a context switch to hand over the CPU.
+
+- When the timer fires, the Interrupt Service Routine (ISR) for the tick is triggered. 
+- The CPU, upon receiving this interrupt, automatically switches from user mode to privileged kernel mode. 
+- During this mode switch, it saves essential registers onto the stack—such as the Program Counter (PC), Link Register (LR), and Status Register flags. 
+- This ensures that the interrupted process can resume seamlessly after the interrupt is handled.
+
+- Once in kernel mode, the timer ISR executes code to increment the system tick count. 
+- In parallel, it updates a per-process runtime counter—essentially measuring how many ticks the currently running process has consumed. 
+- Every process is allocated a time slice, often represented in ticks (e.g., 5 ticks = 5ms), and this runtime counter is compared against the time slice limit.
+
+- If the process’s time slice is not yet exhausted, the kernel does nothing except increment counters and resume the current process. 
+- But if the counter equals or exceeds the time slice, the kernel realizes it's time to perform a context switch. This is a signal that the process has had its 
+fair share of CPU time and needs to yield for others.
+
+- Before initiating the switch, the kernel checks the ready queue—a data structure holding processes that are ready to run. If there's another task waiting (and possibly of higher priority), the kernel begins the context switch process. If not, it may allow the current process to continue briefly, especially in real-time or cooperative systems.
+- The context switch routine is often triggered via a secondary interrupt like PendSV on ARM Cortex-M. 
+- This interrupt is deliberately invoked by the kernel in a controlled way to ensure context switching doesn’t happen during arbitrary ISR execution. Inside PendSV or its equivalent, the kernel saves the current process’s execution context: general-purpose registers (R0–R12), stack pointer (SP), program counter (PC), and system status flags. 
+- This context is saved into the process’s Process Control Block (PCB), which is the kernel’s data structure for managing process state.
+
+- Once the current context is safely stored, the scheduler selects the next process from the ready queue based on criteria like priority, fairness, or deadlines. 
+- It then restores the context of the selected process by loading its saved register values from its PCB back onto the CPU—effectively transplanting the previous state.
+- Crucially, the CPU also restores the interrupt flags and privilege level. If the new task is a user-space process, it sets the mode appropriately; else, it may stay in kernel mode. 
+- This restoration uses an instruction like BX LR, RFE, or IRET, depending on the architecture, which pops the previously saved context from the stack and resumes execution at the point the new process last left off.
+- Thus, every tick not only keeps time but acts as a trigger point for the scheduler to enforce fairness and responsiveness. 
+- The kernel doesn’t just blindly switch—it relies on structured interrupts, carefully layered privilege transitions, and robust context management to orchestrate process lifecycles with precision.
